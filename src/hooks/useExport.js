@@ -1,106 +1,117 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 // Hook for exporting data to various formats
 export const useExport = () => {
-    const [isExporting, setIsExporting] = useState(false);
-    const [progress, setProgress] = useState(0);
+  const [isExporting, setIsExporting] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-    // Export to CSV
-    const exportToCSV = useCallback((data, filename = 'export') => {
-        setIsExporting(true);
+  // Export to CSV
+  const exportToCSV = useCallback((data, filename = "export") => {
+    setIsExporting(true);
+    setProgress(0);
+
+    try {
+      // Convert data to CSV format
+      if (!data || data.length === 0) {
+        throw new Error("No data to export");
+      }
+
+      const headers = Object.keys(data[0]);
+      const csvContent = [
+        headers.join(","),
+        ...data.map((row, index) => {
+          setProgress(((index + 1) / data.length) * 100);
+          return headers
+            .map((header) => {
+              const value = row[header];
+              // Handle values with commas or quotes
+              if (
+                typeof value === "string" &&
+                (value.includes(",") || value.includes('"'))
+              ) {
+                return `"${value.replace(/"/g, '""')}"`;
+              }
+              return value ?? "";
+            })
+            .join(",");
+        }),
+      ].join("\n");
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `${filename}_${new Date().toISOString().split("T")[0]}.csv`,
+      );
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setProgress(100);
+      return { success: true, message: "CSV exported successfully" };
+    } catch (error) {
+      return { success: false, message: error.message };
+    } finally {
+      setTimeout(() => {
+        setIsExporting(false);
         setProgress(0);
+      }, 500);
+    }
+  }, []);
 
-        try {
-            // Convert data to CSV format
-            if (!data || data.length === 0) {
-                throw new Error('No data to export');
-            }
+  // Export to JSON
+  const exportToJSON = useCallback((data, filename = "export") => {
+    setIsExporting(true);
+    setProgress(50);
 
-            const headers = Object.keys(data[0]);
-            const csvContent = [
-                headers.join(','),
-                ...data.map((row, index) => {
-                    setProgress(((index + 1) / data.length) * 100);
-                    return headers.map(header => {
-                        const value = row[header];
-                        // Handle values with commas or quotes
-                        if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
-                            return `"${value.replace(/"/g, '""')}"`;
-                        }
-                        return value ?? '';
-                    }).join(',');
-                })
-            ].join('\n');
+    try {
+      const jsonContent = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonContent], { type: "application/json" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
 
-            // Create and download file
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `${filename}_${new Date().toISOString().split("T")[0]}.json`,
+      );
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
-            link.setAttribute('href', url);
-            link.setAttribute('download', `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+      setProgress(100);
+      return { success: true, message: "JSON exported successfully" };
+    } catch (error) {
+      return { success: false, message: error.message };
+    } finally {
+      setTimeout(() => {
+        setIsExporting(false);
+        setProgress(0);
+      }, 500);
+    }
+  }, []);
 
-            setProgress(100);
-            return { success: true, message: 'CSV exported successfully' };
-        } catch (error) {
-            return { success: false, message: error.message };
-        } finally {
-            setTimeout(() => {
-                setIsExporting(false);
-                setProgress(0);
-            }, 500);
-        }
-    }, []);
+  // Generate printable HTML report
+  const generateReport = useCallback((reportData) => {
+    setIsExporting(true);
+    setProgress(25);
 
-    // Export to JSON
-    const exportToJSON = useCallback((data, filename = 'export') => {
-        setIsExporting(true);
-        setProgress(50);
+    const {
+      title = "AquaTracker Report",
+      subtitle = "",
+      sections = [],
+      footer = "",
+    } = reportData;
 
-        try {
-            const jsonContent = JSON.stringify(data, null, 2);
-            const blob = new Blob([jsonContent], { type: 'application/json' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-
-            link.setAttribute('href', url);
-            link.setAttribute('download', `${filename}_${new Date().toISOString().split('T')[0]}.json`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-
-            setProgress(100);
-            return { success: true, message: 'JSON exported successfully' };
-        } catch (error) {
-            return { success: false, message: error.message };
-        } finally {
-            setTimeout(() => {
-                setIsExporting(false);
-                setProgress(0);
-            }, 500);
-        }
-    }, []);
-
-    // Generate printable HTML report
-    const generateReport = useCallback((reportData) => {
-        setIsExporting(true);
-        setProgress(25);
-
-        const {
-            title = 'AquaTracker Report',
-            subtitle = '',
-            sections = [],
-            footer = ''
-        } = reportData;
-
-        const htmlContent = `
+    const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -187,62 +198,80 @@ export const useExport = () => {
             <h1>${title}</h1>
             <p>${subtitle || `Generated on ${new Date().toLocaleDateString()}`}</p>
         </div>
-        ${sections.map(section => `
+        ${sections
+          .map(
+            (section) => `
             <div class="section">
                 <h2>${section.title}</h2>
-                ${section.type === 'metrics' ? `
+                ${
+                  section.type === "metrics"
+                    ? `
                     <div class="metric-grid">
-                        ${section.data.map(m => `
+                        ${section.data
+                          .map(
+                            (m) => `
                             <div class="metric-card">
                                 <div class="label">${m.label}</div>
-                                <div class="value">${m.value}<span class="unit">${m.unit || ''}</span></div>
+                                <div class="value">${m.value}<span class="unit">${m.unit || ""}</span></div>
                             </div>
-                        `).join('')}
+                        `,
+                          )
+                          .join("")}
                     </div>
-                ` : section.type === 'table' ? `
+                `
+                    : section.type === "table"
+                      ? `
                     <table>
                         <thead>
-                            <tr>${section.headers.map(h => `<th>${h}</th>`).join('')}</tr>
+                            <tr>${section.headers.map((h) => `<th>${h}</th>`).join("")}</tr>
                         </thead>
                         <tbody>
-                            ${section.rows.map(row => `
-                                <tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>
-                            `).join('')}
+                            ${section.rows
+                              .map(
+                                (row) => `
+                                <tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>
+                            `,
+                              )
+                              .join("")}
                         </tbody>
                     </table>
-                ` : `<p>${section.content}</p>`}
+                `
+                      : `<p>${section.content}</p>`
+                }
             </div>
-        `).join('')}
+        `,
+          )
+          .join("")}
         <div class="footer">
-            ${footer || 'AquaTracker™ - Water Quality Management System'}
+            ${footer || "AquaTracker™ - Water Quality Management System"}
         </div>
     </div>
 </body>
 </html>`;
 
-        setProgress(75);
+    setProgress(75);
 
-        // Open in new window for printing
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(htmlContent);
-        printWindow.document.close();
+    // Open in new window for printing
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
 
-        setProgress(100);
-        setTimeout(() => {
-            setIsExporting(false);
-            setProgress(0);
-        }, 500);
+    setProgress(100);
+    setTimeout(() => {
+      setIsExporting(false);
+      setProgress(0);
+    }, 500);
 
-        return { success: true, message: 'Report generated successfully' };
-    }, []);
+    return { success: true, message: "Report generated successfully" };
+  }, []);
 
-    return {
-        isExporting,
-        progress,
-        exportToCSV,
-        exportToJSON,
-        generateReport
-    };
+  return {
+    isExporting,
+    progress,
+    exportToCSV,
+    exportToJSON,
+    generateReport,
+  };
 };
 
 export default useExport;

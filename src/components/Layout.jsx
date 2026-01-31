@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import Sidebar from './Sidebar';
-import Header from './Header';
-import Background from './Background';
-import ParticleBackground from './ParticleBackground';
-import CommandPalette from './CommandPalette';
-import FloatingActionButton from './FloatingActionButton';
-import { MobileNavProvider, useMobileNav } from '../context/MobileNavContext';
+import React, { useState, useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import Sidebar from "./Sidebar";
+import Header from "./Header";
+import Background from "./Background";
+import ParticleBackground from "./ParticleBackground";
+import CommandPalette from "./CommandPalette";
+import FloatingActionButton from "./FloatingActionButton";
+import { MobileNavProvider, useMobileNav } from "../context/MobileNavContext";
 
 const LayoutContent = () => {
   const location = useLocation();
@@ -22,17 +22,17 @@ const LayoutContent = () => {
   // Global keyboard shortcut for command palette
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setCommandPaletteOpen(prev => !prev);
+        setCommandPaletteOpen((prev) => !prev);
       }
       // Close mobile menu on Escape
-      if (e.key === 'Escape' && isMobileMenuOpen) {
+      if (e.key === "Escape" && isMobileMenuOpen) {
         closeMobileMenu();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMobileMenuOpen, closeMobileMenu]);
 
   return (
@@ -43,29 +43,33 @@ const LayoutContent = () => {
       {/* Mobile Backdrop Overlay - Only renders on mobile */}
       {isMobile && (
         <div
-          className={`mobile-backdrop ${isMobileMenuOpen ? 'visible' : ''}`}
+          className={`mobile-backdrop ${isMobileMenuOpen ? "visible" : ""}`}
           onClick={closeMobileMenu}
           aria-hidden="true"
         />
       )}
 
       {/* Sidebar - Desktop: always visible, Mobile: off-canvas drawer */}
-      <div className={`${isMobile ? `mobile-sidebar ${isMobileMenuOpen ? 'open' : ''}` : 'desktop-sidebar'}`}>
+      <div
+        className={`${isMobile ? `mobile-sidebar ${isMobileMenuOpen ? "open" : ""}` : "desktop-sidebar"}`}
+      >
         <Sidebar />
       </div>
 
       <div className="flex-1 flex flex-col relative z-10 transition-all duration-300">
         <Header onCommandPalette={() => setCommandPaletteOpen(true)} />
-        <main className={`flex-1 p-6 overflow-y-auto overflow-x-hidden no-scrollbar ${isMobile ? 'mobile-content' : ''}`}>
+        <main
+          className={`flex-1 p-6 overflow-y-auto overflow-x-hidden no-scrollbar ${isMobile ? "mobile-content" : ""}`}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
+              initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
               transition={{
                 duration: 0.4,
-                ease: [0.22, 1, 0.36, 1]
+                ease: [0.22, 1, 0.36, 1],
               }}
               className="h-full max-w-[1600px] mx-auto"
             >

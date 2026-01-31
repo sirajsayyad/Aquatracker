@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* === CUSTOM FONTS === */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap");
 
 /* === CSS VARIABLES (CYBERNETIC PALETTE) === */
 :root {
@@ -27,9 +27,9 @@
   --glass-bg: rgba(15, 20, 35, 0.6);
 
   /* Typography */
-  --font-display: 'Manrope', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 
   /* Animation */
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -95,7 +95,12 @@ body,
 }
 
 body {
-  background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-space) 50%, #0a0f1a 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg-deep) 0%,
+    var(--bg-space) 50%,
+    #0a0f1a 100%
+  );
   color: #ffffff;
   font-family: var(--font-body);
   overflow: hidden;
@@ -129,7 +134,9 @@ body {
 }
 
 .text-glow {
-  text-shadow: 0 0 20px var(--primary-glow), 0 0 40px rgba(0, 242, 255, 0.3);
+  text-shadow:
+    0 0 20px var(--primary-glow),
+    0 0 40px rgba(0, 242, 255, 0.3);
 }
 
 /* === CINEMATIC BACKGROUND === */
@@ -138,9 +145,21 @@ body {
   inset: 0;
   z-index: -2;
   background:
-    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(0, 100, 255, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(0, 242, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 60% at 50% 80%, rgba(189, 0, 255, 0.08) 0%, transparent 50%);
+    radial-gradient(
+      ellipse 80% 50% at 20% 40%,
+      rgba(0, 100, 255, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 80% 20%,
+      rgba(0, 242, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 40% 60% at 50% 80%,
+      rgba(189, 0, 255, 0.08) 0%,
+      transparent 50%
+    );
   animation: ambient-drift 30s ease-in-out infinite alternate;
 }
 
@@ -174,14 +193,16 @@ body {
 
 /* Scan Line Effect */
 .scan-lines::after {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.03) 2px,
-      rgba(0, 0, 0, 0.03) 4px);
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
   pointer-events: none;
   z-index: 9999;
 }
@@ -203,13 +224,18 @@ body {
 }
 
 .holo-panel::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--primary-cyan),
+    transparent
+  );
   opacity: 0;
   transition: all 0.6s ease;
 }
@@ -240,20 +266,25 @@ body {
 
 /* === NEON GLOW EFFECTS === */
 .glow-cyan {
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4), 0 0 40px rgba(0, 242, 255, 0.2);
+  box-shadow:
+    0 0 20px rgba(0, 242, 255, 0.4),
+    0 0 40px rgba(0, 242, 255, 0.2);
 }
 
 .glow-purple {
-  box-shadow: 0 0 20px rgba(189, 0, 255, 0.4), 0 0 40px rgba(189, 0, 255, 0.2);
+  box-shadow:
+    0 0 20px rgba(189, 0, 255, 0.4),
+    0 0 40px rgba(189, 0, 255, 0.2);
 }
 
 .glow-neon {
-  box-shadow: 0 0 20px rgba(204, 255, 0, 0.4), 0 0 40px rgba(204, 255, 0, 0.2);
+  box-shadow:
+    0 0 20px rgba(204, 255, 0, 0.4),
+    0 0 40px rgba(204, 255, 0, 0.2);
 }
 
 /* === ANIMATIONS === */
 @keyframes pulse-glow {
-
   0%,
   100% {
     opacity: 0.5;
@@ -267,7 +298,6 @@ body {
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
@@ -299,7 +329,6 @@ body {
 }
 
 @keyframes gradient-shift {
-
   0%,
   100% {
     background-position: 0% 50%;
@@ -319,7 +348,12 @@ body {
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -372,7 +406,11 @@ body {
 
 /* === BUTTON STYLES === */
 .btn-cyber {
-  background: linear-gradient(135deg, rgba(0, 242, 255, 0.1), rgba(0, 242, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(0, 242, 255, 0.1),
+    rgba(0, 242, 255, 0.05)
+  );
   border: 1px solid rgba(0, 242, 255, 0.3);
   color: var(--primary-cyan);
   padding: 10px 24px;
@@ -388,10 +426,15 @@ body {
 }
 
 .btn-cyber::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 242, 255, 0.2),
+    transparent
+  );
   transform: translateX(-100%);
   transition: transform 0.5s ease;
 }
@@ -401,8 +444,14 @@ body {
 }
 
 .btn-cyber:hover {
-  background: linear-gradient(135deg, rgba(0, 242, 255, 0.2), rgba(0, 242, 255, 0.1));
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.3), inset 0 0 20px rgba(0, 242, 255, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 242, 255, 0.2),
+    rgba(0, 242, 255, 0.1)
+  );
+  box-shadow:
+    0 0 20px rgba(0, 242, 255, 0.3),
+    inset 0 0 20px rgba(0, 242, 255, 0.1);
   transform: translateY(-2px);
 }
 
@@ -506,7 +555,11 @@ body {
 }
 
 .card-warning {
-  background: linear-gradient(135deg, var(--glass-bg), rgba(245, 158, 11, 0.02));
+  background: linear-gradient(
+    135deg,
+    var(--glass-bg),
+    rgba(245, 158, 11, 0.02)
+  );
   border-left: 3px solid var(--accent-warning);
 }
 
@@ -518,7 +571,12 @@ body {
 /* === DIVIDERS === */
 .divider-glow {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--primary-cyan),
+    transparent
+  );
   border: none;
   opacity: 0.5;
 }
@@ -545,16 +603,17 @@ body {
 }
 
 .shimmer {
-  background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.05) 50%,
-      transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
@@ -581,7 +640,7 @@ body {
 }
 
 .btn-ripple::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -590,7 +649,9 @@ body {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
+  transition:
+    width 0.6s ease,
+    height 0.6s ease;
 }
 
 .btn-ripple:active::after {
@@ -607,11 +668,13 @@ body {
 }
 
 .gradient-text-animated {
-  background: linear-gradient(90deg,
-      var(--primary-cyan),
-      var(--accent-purple),
-      var(--accent-neon),
-      var(--primary-cyan));
+  background: linear-gradient(
+    90deg,
+    var(--primary-cyan),
+    var(--accent-purple),
+    var(--accent-neon),
+    var(--primary-cyan)
+  );
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -620,7 +683,6 @@ body {
 }
 
 @keyframes gradient-shift {
-
   0%,
   100% {
     background-position: 0% 50%;
@@ -633,7 +695,9 @@ body {
 
 /* === ENHANCED HOVER EFFECTS === */
 .hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .hover-lift:hover {
@@ -657,10 +721,12 @@ body {
 
 /* === SKELETON LOADING === */
 .skeleton {
-  background: linear-gradient(90deg,
-      rgba(255, 255, 255, 0.05) 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;
@@ -691,7 +757,6 @@ body {
 
 /* === MOBILE RESPONSIVE ENHANCEMENTS === */
 @media (max-width: 1024px) {
-
   /* Sidebar collapse for tablets */
   .sidebar-responsive {
     width: 80px !important;
@@ -703,7 +768,6 @@ body {
 }
 
 @media (max-width: 768px) {
-
   /* Mobile sidebar - hidden by default */
   .sidebar-mobile-hidden {
     transform: translateX(-100%);
@@ -794,7 +858,6 @@ body {
 }
 
 @media (max-width: 480px) {
-
   /* Extra small mobile optimizations */
   .holo-panel {
     padding: 12px;
@@ -819,7 +882,6 @@ body {
 
 /* === TOUCH DEVICE OPTIMIZATIONS === */
 @media (hover: none) and (pointer: coarse) {
-
   /* Larger touch targets */
   button,
   .clickable {
@@ -839,7 +901,6 @@ body {
 
 /* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
@@ -878,7 +939,6 @@ body.mobile-nav-open {
 
 /* === MOBILE DRAWER STYLES === */
 @media (max-width: 768px) {
-
   /* Mobile Sidebar - Off-canvas drawer */
   .mobile-sidebar {
     position: fixed;
@@ -904,7 +964,9 @@ body.mobile-nav-open {
     z-index: 199;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease;
   }
 
   .mobile-backdrop.visible {
@@ -1019,7 +1081,7 @@ body.mobile-nav-open {
   }
 
   /* Mobile space reduction */
-  .mobile-space-y-4>*+* {
+  .mobile-space-y-4 > * + * {
     margin-top: 1rem !important;
   }
 
@@ -1113,7 +1175,6 @@ body.mobile-nav-open {
 
 /* === EXTRA SMALL MOBILE (≤480px) === */
 @media (max-width: 480px) {
-
   /* Even smaller panels */
   .holo-panel {
     padding: 12px;
@@ -1183,7 +1244,6 @@ body.mobile-nav-open {
 
 /* === MOBILE TOUCH DEVICE OPTIMIZATION === */
 @media (hover: none) and (pointer: coarse) {
-
   /* Remove all hover-only effects */
   .holo-panel::before {
     display: none;
