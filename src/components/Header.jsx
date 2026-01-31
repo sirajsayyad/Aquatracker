@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Bell, Globe, User, Command, Settings, LogOut, ChevronDown, Check, Sun, Moon } from 'lucide-react';
+import { Search, Bell, Globe, User, Command, Settings, LogOut, ChevronDown, Check, Sun, Moon, Menu } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import { useMobileNav } from '../context/MobileNavContext';
 
 const Header = ({ onCommandPalette }) => {
     const navigate = useNavigate();
     const { language, setLanguage, t, availableLanguages } = useLanguage();
     const { theme, toggleTheme, isDark } = useTheme();
+    const { toggleMobileMenu, isMobile } = useMobileNav();
     const [isSearchFocused, setIsSearchFocused] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
@@ -22,16 +24,27 @@ const Header = ({ onCommandPalette }) => {
 
     return (
         <header
-            className="flex items-center justify-between px-8 py-4 z-50 sticky top-0 shrink-0"
+            className={`flex items-center justify-between px-8 py-4 z-50 sticky top-0 shrink-0 ${isMobile ? 'mobile-header' : ''}`}
             style={{
                 background: 'linear-gradient(180deg, rgba(5, 8, 15, 0.9) 0%, rgba(5, 8, 15, 0.7) 100%)',
                 backdropFilter: 'blur(20px)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
             }}
         >
-            {/* Search Bar */}
+            {/* Mobile Menu Button - Only visible on mobile */}
+            {isMobile && (
+                <button
+                    className="mobile-menu-btn mr-3"
+                    onClick={toggleMobileMenu}
+                    aria-label="Open navigation menu"
+                >
+                    <Menu size={22} />
+                </button>
+            )}
+
+            {/* Search Bar - Hidden on mobile, shown on desktop */}
             <motion.div
-                className="relative w-[400px]"
+                className={`relative ${isMobile ? 'mobile-search-hidden' : 'w-[400px]'}`}
                 animate={{ scale: isSearchFocused ? 1.02 : 1 }}
                 transition={{ duration: 0.2 }}
             >
@@ -76,7 +89,7 @@ const Header = ({ onCommandPalette }) => {
             {/* Right Actions */}
             <div className="flex items-center gap-5">
                 {/* Quick Actions */}
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center ${isMobile ? 'gap-2' : 'gap-3'}`}>
                     {/* Theme Toggle */}
                     <motion.button
                         className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex-center text-gray-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all overflow-hidden"
@@ -98,8 +111,8 @@ const Header = ({ onCommandPalette }) => {
                         </AnimatePresence>
                     </motion.button>
 
-                    {/* Language Selector */}
-                    <div className="relative">
+                    {/* Language Selector - Hidden on small mobile */}
+                    <div className={`relative ${isMobile ? 'mobile-hidden' : ''}`}>
                         <motion.button
                             className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex-center text-gray-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all"
                             whileHover={{ scale: 1.05 }}
@@ -162,7 +175,7 @@ const Header = ({ onCommandPalette }) => {
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                     transition={{ duration: 0.2 }}
-                                    className="absolute right-0 top-14 w-80 glass-panel p-0 overflow-hidden"
+                                    className={`absolute right-0 top-14 glass-panel p-0 overflow-hidden z-50 ${isMobile ? 'w-72 -right-2' : 'w-80'}`}
                                 >
                                     <div className="flex items-center justify-between p-4 border-b border-white/5">
                                         <span className="font-bold text-sm">Notifications</span>
@@ -194,17 +207,17 @@ const Header = ({ onCommandPalette }) => {
                     </div>
                 </div>
 
-                {/* Divider */}
-                <div className="h-8 w-px bg-white/10" />
+                {/* Divider - Hidden on mobile */}
+                <div className={`h-8 w-px bg-white/10 ${isMobile ? 'hidden' : ''}`} />
 
                 {/* Profile */}
-                <div className="relative">
+                <div className={`relative ${isMobile ? 'mobile-profile-compact' : ''}`}>
                     <motion.div
                         className="flex items-center gap-3 cursor-pointer group px-3 py-2 rounded-xl hover:bg-white/5 transition-colors"
                         onClick={() => setShowProfile(!showProfile)}
                         whileHover={{ scale: 1.02 }}
                     >
-                        <div className="text-right hidden md:block">
+                        <div className={`text-right profile-text ${isMobile ? 'hidden' : 'block'}`}>
                             <p className="text-sm font-semibold text-white group-hover:text-cyan-400 transition-colors">
                                 Admin Commander
                             </p>
@@ -216,7 +229,7 @@ const Header = ({ onCommandPalette }) => {
                                 <User size={18} className="text-gray-300" />
                             </div>
                         </div>
-                        <ChevronDown size={14} className="text-gray-400 group-hover:text-white transition-colors" />
+                        <ChevronDown size={14} className={`text-gray-400 group-hover:text-white transition-colors ${isMobile ? 'hidden' : ''}`} />
                     </motion.div>
 
                     {/* Profile Dropdown */}
@@ -227,8 +240,15 @@ const Header = ({ onCommandPalette }) => {
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute right-0 top-16 w-56 glass-panel p-2 overflow-hidden"
+                                className="absolute right-0 top-16 w-56 glass-panel p-2 overflow-hidden z-50"
                             >
+                                {/* Show name on mobile in dropdown */}
+                                {isMobile && (
+                                    <div className="px-4 py-3 border-b border-white/5 mb-2">
+                                        <p className="text-sm font-semibold text-white">Admin Commander</p>
+                                        <p className="text-[10px] text-gray-500 tracking-wider font-mono">PCB LEVEL 5</p>
+                                    </div>
+                                )}
                                 <button
                                     className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-left"
                                     onClick={() => { setShowProfile(false); navigate('/settings'); }}
@@ -265,3 +285,4 @@ const Header = ({ onCommandPalette }) => {
 };
 
 export default Header;
+

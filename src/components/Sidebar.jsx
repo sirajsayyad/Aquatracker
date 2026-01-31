@@ -24,9 +24,11 @@ import {
     Lock
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useMobileNav } from '../context/MobileNavContext';
 
 const Sidebar = () => {
     const { t } = useLanguage();
+    const { closeMobileMenu, isMobile } = useMobileNav();
     const [showFeatures, setShowFeatures] = useState(false);
 
     const navItems = [
@@ -107,11 +109,11 @@ const Sidebar = () => {
                 <div className="absolute -right-10 bottom-20 w-32 h-[200px] bg-purple-500/5 blur-[80px] pointer-events-none" />
 
                 {/* Brand Header */}
-                <div className="h-[80px] flex items-center px-6 border-b border-white/5">
+                <div className="h-[80px] flex items-center justify-between px-6 border-b border-white/5">
                     <div className="flex items-center gap-4">
                         <motion.div
                             className="relative"
-                            animate={{ rotate: [0, 5, -5, 0] }}
+                            animate={isMobile ? {} : { rotate: [0, 5, -5, 0] }}
                             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
                         >
                             <div className="absolute inset-0 bg-cyan-400 blur-xl opacity-40 animate-pulse-glow" />
@@ -128,6 +130,16 @@ const Sidebar = () => {
                             </p>
                         </div>
                     </div>
+                    {/* Mobile Close Button */}
+                    {isMobile && (
+                        <button
+                            onClick={closeMobileMenu}
+                            className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                            aria-label="Close navigation menu"
+                        >
+                            <X size={20} />
+                        </button>
+                    )}
                 </div>
 
                 {/* Navigation */}
@@ -141,8 +153,9 @@ const Sidebar = () => {
                         <motion.div key={item.path} variants={itemVariants}>
                             <NavLink
                                 to={item.path}
+                                onClick={() => isMobile && closeMobileMenu()}
                                 className={({ isActive }) =>
-                                    `relative flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group ${isActive
+                                    `relative flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group mobile-nav-item ${isActive
                                         ? 'text-white'
                                         : 'text-gray-400 hover:text-white hover:bg-white/5'
                                     }`

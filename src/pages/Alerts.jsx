@@ -107,9 +107,8 @@ const Alerts = () => {
                         <p className="text-sm text-gray-500 font-mono">{alerts.length} total alerts</p>
                     </div>
                 </div>
-
                 {/* Search */}
-                <div className="relative w-[300px]">
+                <div className="relative w-[300px] mobile-w-full">
                     <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                         type="text"
@@ -133,8 +132,8 @@ const Alerts = () => {
                         key={tab.key}
                         onClick={() => setFilter(tab.key)}
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === tab.key
-                                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                                : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                            ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                            : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
                             }`}
                     >
                         {tab.label}
@@ -203,13 +202,15 @@ const Alerts = () => {
             </motion.div>
 
             {/* Empty State */}
-            {filteredAlerts.length === 0 && (
-                <div className="holo-panel p-12 text-center">
-                    <Bell size={48} className="text-gray-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-white mb-2">No alerts found</h3>
-                    <p className="text-sm text-gray-500">Try adjusting your filters or search query.</p>
-                </div>
-            )}
+            {
+                filteredAlerts.length === 0 && (
+                    <div className="holo-panel p-12 text-center">
+                        <Bell size={48} className="text-gray-600 mx-auto mb-4" />
+                        <h3 className="text-lg font-bold text-white mb-2">No alerts found</h3>
+                        <p className="text-sm text-gray-500">Try adjusting your filters or search query.</p>
+                    </div>
+                )
+            }
 
             {/* Alert Detail Modal */}
             <AnimatePresence>
@@ -257,7 +258,7 @@ const Alerts = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.div>
+        </motion.div >
     );
 };
 

@@ -27,7 +27,7 @@ const FloatingActionButton = () => {
     const toggleOpen = () => setIsOpen(!isOpen);
 
     return (
-        <div className="fixed bottom-8 right-8 z-50">
+        <div className="fixed bottom-8 right-8 z-50 mobile-fab mobile-safe-bottom">\r
             {/* Action Items */}
             <AnimatePresence>
                 {isOpen && (

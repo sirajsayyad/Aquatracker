@@ -107,8 +107,8 @@ const Analytics = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <div className="flex gap-1 p-1 rounded-xl bg-black/30 border border-white/5">
+                <div className="flex items-center gap-3 mobile-flex-col mobile-w-full">
+                    <div className="flex gap-1 p-1 rounded-xl bg-black/30 border border-white/5 mobile-time-selector mobile-w-full">
                         {['24H', '7D', '30D', '90D'].map((t) => (
                             <button
                                 key={t}
@@ -135,7 +135,7 @@ const Analytics = () => {
             </motion.div>
 
             {/* KPI Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mobile-grid-cols-1">
                 {[
                     { label: 'Avg. WQI Score', value: '92.4', trend: '+3.2%', icon: Droplets, color: 'cyan' },
                     { label: 'Treatment Efficiency', value: '94.1%', trend: '+1.8%', icon: Activity, color: 'green' },

@@ -7,10 +7,17 @@ import Background from './Background';
 import ParticleBackground from './ParticleBackground';
 import CommandPalette from './CommandPalette';
 import FloatingActionButton from './FloatingActionButton';
+import { MobileNavProvider, useMobileNav } from '../context/MobileNavContext';
 
-const Layout = () => {
+const LayoutContent = () => {
   const location = useLocation();
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const { isMobileMenuOpen, closeMobileMenu, isMobile } = useMobileNav();
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    closeMobileMenu();
+  }, [location.pathname]);
 
   // Global keyboard shortcut for command palette
   useEffect(() => {
@@ -19,19 +26,37 @@ const Layout = () => {
         e.preventDefault();
         setCommandPaletteOpen(prev => !prev);
       }
+      // Close mobile menu on Escape
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        closeMobileMenu();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [isMobileMenuOpen, closeMobileMenu]);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden text-white font-body selection:bg-cyan-500/30">
       <Background />
-      <ParticleBackground particleCount={25} />
-      <Sidebar />
+      <ParticleBackground particleCount={isMobile ? 10 : 25} />
+
+      {/* Mobile Backdrop Overlay - Only renders on mobile */}
+      {isMobile && (
+        <div
+          className={`mobile-backdrop ${isMobileMenuOpen ? 'visible' : ''}`}
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar - Desktop: always visible, Mobile: off-canvas drawer */}
+      <div className={`${isMobile ? `mobile-sidebar ${isMobileMenuOpen ? 'open' : ''}` : 'desktop-sidebar'}`}>
+        <Sidebar />
+      </div>
+
       <div className="flex-1 flex flex-col relative z-10 transition-all duration-300">
         <Header onCommandPalette={() => setCommandPaletteOpen(true)} />
-        <main className="flex-1 p-6 overflow-y-auto overflow-x-hidden no-scrollbar">
+        <main className={`flex-1 p-6 overflow-y-auto overflow-x-hidden no-scrollbar ${isMobile ? 'mobile-content' : ''}`}>
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -62,5 +87,12 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+const Layout = () => {
+  return (
+    <MobileNavProvider>
+      <LayoutContent />
+    </MobileNavProvider>
+  );
+};
 
+export default Layout;

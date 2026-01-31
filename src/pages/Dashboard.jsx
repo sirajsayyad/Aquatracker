@@ -63,7 +63,7 @@ const Dashboard = () => {
             animate="visible"
         >
             {/* === TOP SECTION: KPI CARDS === */}
-            <div className="grid grid-cols-12 gap-6">
+            <div className="grid grid-cols-12 gap-6 mobile-grid-cols-1">
                 {/* Main WQI Card */}
                 <motion.div
                     className="col-span-12 lg:col-span-4 holo-panel p-6 relative overflow-visible"
@@ -195,7 +195,7 @@ const Dashboard = () => {
 
             {/* === AI PREDICTIONS SECTION === */}
             <motion.div
-                className="grid grid-cols-12 gap-6"
+                className="grid grid-cols-12 gap-6 mobile-grid-cols-1"
                 variants={itemVariants}
             >
                 <div className="col-span-12 lg:col-span-8 holo-panel p-6 relative">
@@ -302,7 +302,7 @@ const Dashboard = () => {
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mobile-grid-cols-2">
                     {liveParameters.map((param, index) => (
                         <motion.div
                             key={index}
