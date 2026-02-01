@@ -95,12 +95,10 @@ body,
 }
 
 body {
-  background: linear-gradient(
-    135deg,
-    var(--bg-deep) 0%,
-    var(--bg-space) 50%,
-    #0a0f1a 100%
-  );
+  background: linear-gradient(135deg,
+      var(--bg-deep) 0%,
+      var(--bg-space) 50%,
+      #0a0f1a 100%);
   color: #ffffff;
   font-family: var(--font-body);
   overflow: hidden;
@@ -145,21 +143,15 @@ body {
   inset: 0;
   z-index: -2;
   background:
-    radial-gradient(
-      ellipse 80% 50% at 20% 40%,
+    radial-gradient(ellipse 80% 50% at 20% 40%,
       rgba(0, 100, 255, 0.15) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse 60% 40% at 80% 20%,
+      transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 20%,
       rgba(0, 242, 255, 0.1) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse 40% 60% at 50% 80%,
+      transparent 50%),
+    radial-gradient(ellipse 40% 60% at 50% 80%,
       rgba(189, 0, 255, 0.08) 0%,
-      transparent 50%
-    );
+      transparent 50%);
   animation: ambient-drift 30s ease-in-out infinite alternate;
 }
 
@@ -196,13 +188,11 @@ body {
   content: "";
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px);
   pointer-events: none;
   z-index: 9999;
 }
@@ -230,12 +220,10 @@ body {
   left: -100%;
   width: 100%;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--primary-cyan),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      var(--primary-cyan),
+      transparent);
   opacity: 0;
   transition: all 0.6s ease;
 }
@@ -285,6 +273,7 @@ body {
 
 /* === ANIMATIONS === */
 @keyframes pulse-glow {
+
   0%,
   100% {
     opacity: 0.5;
@@ -298,6 +287,7 @@ body {
 }
 
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0);
@@ -329,6 +319,7 @@ body {
 }
 
 @keyframes gradient-shift {
+
   0%,
   100% {
     background-position: 0% 50%;
@@ -348,12 +339,10 @@ body {
 }
 
 .animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -406,11 +395,9 @@ body {
 
 /* === BUTTON STYLES === */
 .btn-cyber {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 242, 255, 0.1),
-    rgba(0, 242, 255, 0.05)
-  );
+  background: linear-gradient(135deg,
+      rgba(0, 242, 255, 0.1),
+      rgba(0, 242, 255, 0.05));
   border: 1px solid rgba(0, 242, 255, 0.3);
   color: var(--primary-cyan);
   padding: 10px 24px;
@@ -429,12 +416,10 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 242, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(0, 242, 255, 0.2),
+      transparent);
   transform: translateX(-100%);
   transition: transform 0.5s ease;
 }
@@ -444,11 +429,9 @@ body {
 }
 
 .btn-cyber:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 242, 255, 0.2),
-    rgba(0, 242, 255, 0.1)
-  );
+  background: linear-gradient(135deg,
+      rgba(0, 242, 255, 0.2),
+      rgba(0, 242, 255, 0.1));
   box-shadow:
     0 0 20px rgba(0, 242, 255, 0.3),
     inset 0 0 20px rgba(0, 242, 255, 0.1);
@@ -555,11 +538,9 @@ body {
 }
 
 .card-warning {
-  background: linear-gradient(
-    135deg,
-    var(--glass-bg),
-    rgba(245, 158, 11, 0.02)
-  );
+  background: linear-gradient(135deg,
+      var(--glass-bg),
+      rgba(245, 158, 11, 0.02));
   border-left: 3px solid var(--accent-warning);
 }
 
@@ -571,12 +552,10 @@ body {
 /* === DIVIDERS === */
 .divider-glow {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--primary-cyan),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      var(--primary-cyan),
+      transparent);
   border: none;
   opacity: 0.5;
 }
@@ -603,17 +582,16 @@ body {
 }
 
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
 
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0);
@@ -668,13 +646,11 @@ body {
 }
 
 .gradient-text-animated {
-  background: linear-gradient(
-    90deg,
-    var(--primary-cyan),
-    var(--accent-purple),
-    var(--accent-neon),
-    var(--primary-cyan)
-  );
+  background: linear-gradient(90deg,
+      var(--primary-cyan),
+      var(--accent-purple),
+      var(--accent-neon),
+      var(--primary-cyan));
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -683,6 +659,7 @@ body {
 }
 
 @keyframes gradient-shift {
+
   0%,
   100% {
     background-position: 0% 50%;
@@ -721,12 +698,10 @@ body {
 
 /* === SKELETON LOADING === */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0.05) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;
@@ -757,6 +732,7 @@ body {
 
 /* === MOBILE RESPONSIVE ENHANCEMENTS === */
 @media (max-width: 1024px) {
+
   /* Sidebar collapse for tablets */
   .sidebar-responsive {
     width: 80px !important;
@@ -768,6 +744,7 @@ body {
 }
 
 @media (max-width: 768px) {
+
   /* Mobile sidebar - hidden by default */
   .sidebar-mobile-hidden {
     transform: translateX(-100%);
@@ -858,6 +835,7 @@ body {
 }
 
 @media (max-width: 480px) {
+
   /* Extra small mobile optimizations */
   .holo-panel {
     padding: 12px;
@@ -882,6 +860,7 @@ body {
 
 /* === TOUCH DEVICE OPTIMIZATIONS === */
 @media (hover: none) and (pointer: coarse) {
+
   /* Larger touch targets */
   button,
   .clickable {
@@ -901,6 +880,7 @@ body {
 
 /* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -939,6 +919,7 @@ body.mobile-nav-open {
 
 /* === MOBILE DRAWER STYLES === */
 @media (max-width: 768px) {
+
   /* Mobile Sidebar - Off-canvas drawer */
   .mobile-sidebar {
     position: fixed;
@@ -1081,7 +1062,7 @@ body.mobile-nav-open {
   }
 
   /* Mobile space reduction */
-  .mobile-space-y-4 > * + * {
+  .mobile-space-y-4>*+* {
     margin-top: 1rem !important;
   }
 
@@ -1175,6 +1156,7 @@ body.mobile-nav-open {
 
 /* === EXTRA SMALL MOBILE (≤480px) === */
 @media (max-width: 480px) {
+
   /* Even smaller panels */
   .holo-panel {
     padding: 12px;
@@ -1244,6 +1226,7 @@ body.mobile-nav-open {
 
 /* === MOBILE TOUCH DEVICE OPTIMIZATION === */
 @media (hover: none) and (pointer: coarse) {
+
   /* Remove all hover-only effects */
   .holo-panel::before {
     display: none;
@@ -1281,4 +1264,131 @@ body.mobile-nav-open {
       padding-top: max(12px, env(safe-area-inset-top));
     }
   }
+}
+
+/* === MOBILE PERFORMANCE OPTIMIZATIONS === */
+@media (max-width: 768px) {
+
+  /* Reduce backdrop-filter blur intensity - major GPU savings */
+  .holo-panel {
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+  }
+
+  .glass-panel {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* Disable heavy background animation on mobile */
+  .cinematic-bg {
+    animation: none !important;
+  }
+
+  /* Disable pulsing status dots on mobile */
+  .status-dot {
+    animation: none !important;
+  }
+
+  /* Disable gradient animations on mobile */
+  .animate-gradient-x {
+    animation: none !important;
+    background-position: 0% 50% !important;
+  }
+
+  /* Disable floating animations */
+  .animate-float {
+    animation: none !important;
+  }
+
+  /* Disable shimmer on mobile */
+  .animate-shimmer,
+  .shimmer {
+    animation: none !important;
+  }
+
+  /* Reduce box-shadow complexity on mobile */
+  .holo-panel {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .holo-panel:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transform: none;
+  }
+
+  /* Disable hover glow effects on mobile (saves GPU) */
+  .glow-cyan,
+  .glow-purple,
+  .glow-neon {
+    box-shadow: none;
+  }
+
+  /* Simplify text shadows */
+  .text-glow {
+    text-shadow: none;
+  }
+
+  /* Disable complex button hover effects */
+  .btn-cyber::before {
+    display: none;
+  }
+
+  /* Reduce transition durations for snappier feel */
+  .holo-panel,
+  .glass-panel,
+  .btn-cyber,
+  .input-cyber {
+    transition-duration: 0.15s;
+  }
+}
+
+/* === PREFERS REDUCED MOTION SUPPORT === */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cinematic-bg,
+  .status-dot,
+  .animate-gradient-x,
+  .animate-float,
+  .animate-shimmer,
+  .shimmer,
+  .animate-pulse-glow,
+  .animate-spin-slow {
+    animation: none !important;
+  }
+}
+
+/* === LOW-END DEVICE OPTIMIZATIONS === */
+@media (max-width: 480px) {
+
+  /* Even more aggressive blur reduction for very small devices */
+  .holo-panel,
+  .glass-panel {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* Remove all shadows on very small screens */
+  .holo-panel,
+  .glass-panel {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* === GPU ACCELERATION HINTS === */
+.holo-panel,
+.glass-panel,
+.mobile-drawer {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }

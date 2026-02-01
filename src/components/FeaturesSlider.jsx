@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
@@ -14,35 +14,42 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { upcomingFeatures } from "../data/mockData";
+import useMobilePerformance from "../hooks/useMobilePerformance";
 
 const FeaturesSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const { isMobile, reduceMotion } = useMobilePerformance();
 
-  // Auto-play functionality
+  // Disable auto-play on mobile to save CPU, increase interval otherwise
+  const autoPlayInterval = isMobile ? null : 8000; // 8s instead of 5s, disabled on mobile
+
+  // Auto-play functionality - optimized
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || !autoPlayInterval || reduceMotion) return;
 
     const interval = setInterval(() => {
-      handleNext();
-    }, 5000);
+      setCurrentIndex((prev) =>
+        prev === upcomingFeatures.length - 1 ? 0 : prev + 1
+      );
+    }, autoPlayInterval);
 
     return () => clearInterval(interval);
-  }, [currentIndex, isAutoPlaying]);
+  }, [currentIndex, isAutoPlaying, autoPlayInterval, reduceMotion]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setCurrentIndex((prev) =>
-      prev === 0 ? upcomingFeatures.length - 1 : prev - 1,
+      prev === 0 ? upcomingFeatures.length - 1 : prev - 1
     );
-  };
+  }, []);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentIndex((prev) =>
-      prev === upcomingFeatures.length - 1 ? 0 : prev + 1,
+      prev === upcomingFeatures.length - 1 ? 0 : prev + 1
     );
-  };
+  }, []);
 
-  const getIcon = (iconName) => {
+  const getIcon = useCallback((iconName) => {
     const icons = {
       brain: Brain,
       smartphone: Smartphone,
@@ -53,9 +60,9 @@ const FeaturesSlider = () => {
     };
     const IconComponent = icons[iconName] || Sparkles;
     return <IconComponent size={28} />;
-  };
+  }, []);
 
-  const getStatusColor = (status) => {
+  const getStatusColor = useCallback((status) => {
     switch (status) {
       case "In Development":
         return "text-green-400 bg-green-500/10 border-green-500/30";
@@ -66,31 +73,29 @@ const FeaturesSlider = () => {
       default:
         return "text-cyan-400 bg-cyan-500/10 border-cyan-500/30";
     }
+  }, []);
+
+  // Simplified animation variants for mobile
+  const slideVariants = {
+    initial: { opacity: reduceMotion ? 1 : 0, x: reduceMotion ? 0 : 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: reduceMotion ? 1 : 0, x: reduceMotion ? 0 : -50 },
   };
 
-  const getProgressColor = (status) => {
-    switch (status) {
-      case "In Development":
-        return "from-green-500 to-cyan-500";
-      case "Planning":
-        return "from-amber-500 to-orange-500";
-      case "Research":
-        return "from-purple-500 to-pink-500";
-      default:
-        return "from-cyan-500 to-blue-500";
-    }
+  const transitionConfig = {
+    duration: isMobile ? 0.15 : 0.3,
   };
 
   return (
     <motion.div
       className="holo-panel p-6 relative overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: isMobile ? 0.25 : 0.5 }}
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
     >
-      {/* Gradient Top Bar */}
+      {/* Gradient Top Bar - Disabled animation on mobile via CSS */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-cyan-500 to-pink-500 animate-gradient-x" />
 
       {/* Header */}
@@ -113,7 +118,7 @@ const FeaturesSlider = () => {
           <motion.button
             onClick={handlePrev}
             className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex-center text-gray-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all"
-            whileHover={{ scale: 1.05 }}
+            whileHover={isMobile ? {} : { scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <ChevronLeft size={20} />
@@ -121,7 +126,7 @@ const FeaturesSlider = () => {
           <motion.button
             onClick={handleNext}
             className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex-center text-gray-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all"
-            whileHover={{ scale: 1.05 }}
+            whileHover={isMobile ? {} : { scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <ChevronRight size={20} />
@@ -133,10 +138,11 @@ const FeaturesSlider = () => {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.3 }}
+          variants={slideVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={transitionConfig}
           className="grid grid-cols-1 lg:grid-cols-2 gap-6"
         >
           {/* Left: Feature Info */}
@@ -220,7 +226,10 @@ const FeaturesSlider = () => {
                           314 -
                           (upcomingFeatures[currentIndex].progress / 100) * 314,
                       }}
-                      transition={{ duration: 1, ease: "easeOut" }}
+                      transition={{
+                        duration: reduceMotion ? 0 : (isMobile ? 0.5 : 1),
+                        ease: "easeOut"
+                      }}
                     />
                     <defs>
                       <linearGradient
@@ -250,11 +259,11 @@ const FeaturesSlider = () => {
             {/* CTA Button */}
             <motion.button
               className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 font-medium hover:bg-purple-500/20 transition-colors"
-              whileHover={{ scale: 1.02 }}
+              whileHover={isMobile ? {} : { scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() =>
                 alert(
-                  `You'll be notified when "${upcomingFeatures[currentIndex].title}" is ready!`,
+                  `You'll be notified when "${upcomingFeatures[currentIndex].title}" is ready!`
                 )
               }
             >
@@ -271,11 +280,10 @@ const FeaturesSlider = () => {
           <button
             key={i}
             onClick={() => setCurrentIndex(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === currentIndex
+            className={`h-2 rounded-full transition-all duration-300 ${i === currentIndex
                 ? "w-8 bg-gradient-to-r from-purple-500 to-cyan-500"
                 : "w-2 bg-white/20 hover:bg-white/40"
-            }`}
+              }`}
           />
         ))}
       </div>
@@ -283,4 +291,4 @@ const FeaturesSlider = () => {
   );
 };
 
-export default FeaturesSlider;
+export default React.memo(FeaturesSlider);

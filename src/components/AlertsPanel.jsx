@@ -1,20 +1,22 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Bell,
   AlertTriangle,
   CheckCircle,
   Info,
   AlertOctagon,
-  X,
   ExternalLink,
 } from "lucide-react";
 import { recentAlerts } from "../data/mockData";
+import useMobilePerformance from "../hooks/useMobilePerformance";
 
 const AlertsPanel = () => {
   const navigate = useNavigate();
-  const getAlertIcon = (type) => {
+  const { isMobile, reduceMotion } = useMobilePerformance();
+
+  const getAlertIcon = useCallback((type) => {
     switch (type) {
       case "warning":
         return <AlertTriangle size={16} className="text-amber-400" />;
@@ -25,9 +27,9 @@ const AlertsPanel = () => {
       default:
         return <Info size={16} className="text-cyan-400" />;
     }
-  };
+  }, []);
 
-  const getAlertStyles = (type) => {
+  const getAlertStyles = useCallback((type) => {
     switch (type) {
       case "warning":
         return "border-l-amber-500 hover:border-amber-500/50";
@@ -38,14 +40,23 @@ const AlertsPanel = () => {
       default:
         return "border-l-cyan-500 hover:border-cyan-500/50";
     }
-  };
+  }, []);
+
+  const handleViewAll = useCallback(() => {
+    navigate("/alerts");
+  }, [navigate]);
+
+  // Optimized animation config
+  const containerAnimation = useMemo(() => ({
+    initial: { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: isMobile ? 0.25 : 0.5 }
+  }), [isMobile, reduceMotion]);
 
   return (
     <motion.div
       className="holo-panel p-6 relative"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      {...containerAnimation}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -66,9 +77,9 @@ const AlertsPanel = () => {
 
         <motion.button
           className="text-xs text-cyan-400 hover:underline font-medium"
-          whileHover={{ scale: 1.05 }}
+          whileHover={isMobile ? {} : { scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => navigate("/alerts")}
+          onClick={handleViewAll}
         >
           View All
         </motion.button>
@@ -80,10 +91,10 @@ const AlertsPanel = () => {
           <motion.div
             key={alert.id}
             className={`p-4 rounded-xl bg-white/5 border-l-2 border border-white/5 transition-all group cursor-pointer ${getAlertStyles(alert.type)}`}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: reduceMotion ? 1 : 0, x: reduceMotion ? 0 : -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ x: 4, backgroundColor: "rgba(255,255,255,0.08)" }}
+            transition={{ delay: isMobile ? index * 0.03 : index * 0.1 }}
+            whileHover={isMobile ? {} : { x: 4, backgroundColor: "rgba(255,255,255,0.08)" }}
           >
             <div className="flex items-start gap-3">
               <div className="mt-0.5">{getAlertIcon(alert.type)}</div>
@@ -105,8 +116,8 @@ const AlertsPanel = () => {
                   </span>
                   <motion.button
                     className="opacity-0 group-hover:opacity-100 text-xs text-cyan-400 flex items-center gap-1 transition-opacity"
-                    whileHover={{ scale: 1.05 }}
-                    onClick={() => navigate("/alerts")}
+                    whileHover={isMobile ? {} : { scale: 1.05 }}
+                    onClick={handleViewAll}
                   >
                     Details <ExternalLink size={10} />
                   </motion.button>
@@ -120,4 +131,4 @@ const AlertsPanel = () => {
   );
 };
 
-export default AlertsPanel;
+export default React.memo(AlertsPanel);

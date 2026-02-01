@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { waterQualityTrends, liveParameters } from "../data/mockData";
 import Gauge from "../components/Gauge";
 import TeamSlider from "../components/TeamSlider";
 import AlertsPanel from "../components/AlertsPanel";
 import FeaturesSlider from "../components/FeaturesSlider";
+import useMobilePerformance from "../hooks/useMobilePerformance";
 import {
   AlertTriangle,
   CheckCircle,
@@ -34,26 +35,31 @@ import {
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState("8H");
+  const { isMobile, reduceMotion } = useMobilePerformance();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  // Optimized animation variants based on device performance
+  const containerVariants = useMemo(() => ({
+    hidden: { opacity: reduceMotion ? 1 : 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
+        staggerChildren: isMobile ? 0.03 : 0.1, // Faster stagger on mobile
+        delayChildren: isMobile ? 0.05 : 0.1,
       },
     },
-  };
+  }), [isMobile, reduceMotion]);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+  const itemVariants = useMemo(() => ({
+    hidden: { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+      transition: {
+        duration: isMobile ? 0.25 : 0.5, // Faster animations on mobile
+        ease: [0.22, 1, 0.36, 1]
+      },
     },
-  };
+  }), [isMobile, reduceMotion]);
 
   return (
     <motion.div
@@ -412,11 +418,10 @@ const Dashboard = () => {
               <button
                 key={t}
                 onClick={() => setTimeRange(t)}
-                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${
-                  timeRange === t
+                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${timeRange === t
                     ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
                     : "text-gray-500 hover:text-white hover:bg-white/5"
-                }`}
+                  }`}
               >
                 {t}
               </button>
