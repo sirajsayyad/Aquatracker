@@ -22,6 +22,7 @@ import {
   Cloud,
   Smartphone,
   Lock,
+  Sliders,
 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { useMobileNav } from "../context/MobileNavContext";
@@ -39,6 +40,7 @@ const Sidebar = () => {
     { icon: Bell, labelKey: "alerts", path: "/alerts" },
     { icon: FileText, labelKey: "reports", path: "/reports" },
     { icon: Settings, labelKey: "config", path: "/settings" },
+    { icon: Sliders, label: "Operator Mode", path: "/operator" },
   ];
 
   const features = [
@@ -229,10 +231,9 @@ const Sidebar = () => {
                 to={item.path}
                 onClick={() => isMobile && closeMobileMenu()}
                 className={({ isActive }) =>
-                  `relative flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group mobile-nav-item ${
-                    isActive
-                      ? "text-white"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                  `relative flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group mobile-nav-item ${isActive
+                    ? "text-white"
+                    : "text-gray-400 hover:text-white hover:bg-white/5"
                   }`
                 }
               >
@@ -261,22 +262,21 @@ const Sidebar = () => {
                     {/* Icon */}
                     <item.icon
                       size={20}
-                      className={`relative z-10 transition-all duration-300 ${
-                        isActive ? "text-cyan-400" : "group-hover:text-cyan-400"
-                      }`}
+                      className={`relative z-10 transition-all duration-300 ${isActive ? "text-cyan-400" : "group-hover:text-cyan-400"
+                        }`}
                       style={
                         isActive
                           ? {
-                              filter:
-                                "drop-shadow(0 0 8px rgba(0, 242, 255, 0.6))",
-                            }
+                            filter:
+                              "drop-shadow(0 0 8px rgba(0, 242, 255, 0.6))",
+                          }
                           : {}
                       }
                     />
 
                     {/* Label */}
                     <span className="relative z-10 font-medium tracking-wide text-sm">
-                      {t(item.labelKey)}
+                      {item.labelKey ? t(item.labelKey) : item.label}
                     </span>
 
                     {/* Arrow for active */}

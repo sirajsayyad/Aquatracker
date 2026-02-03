@@ -12,6 +12,7 @@ const Alerts = lazy(() => import("./pages/Alerts"));
 const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Login = lazy(() => import("./pages/Login"));
+const OperatorMode = lazy(() => import("./pages/OperatorMode"));
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/operator" element={<OperatorMode />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

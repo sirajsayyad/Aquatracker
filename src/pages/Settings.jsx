@@ -47,37 +47,31 @@ const Settings = () => {
   const teamMembers = [
     {
       name: "Shweta Kore",
-      role: "Project Lead",
       initials: "SK",
       status: "online",
     },
     {
       name: "Pratiksha Savant",
-      role: "Frontend Developer",
       initials: "PS",
       status: "online",
     },
     {
       name: "Rutuja Veer",
-      role: "Backend Developer",
       initials: "RV",
       status: "online",
     },
     {
       name: "Sakshi Patil",
-      role: "UI/UX Designer",
       initials: "SP",
-      status: "busy",
+      status: "online",
     },
     {
       name: "Uday Pawar",
-      role: "Data Analyst",
       initials: "UP",
       status: "online",
     },
     {
       name: "Siraj Sayyad",
-      role: "Full Stack Developer",
       initials: "SS",
       status: "online",
     },
@@ -582,10 +576,10 @@ const Settings = () => {
                       </div>
                       <div
                         className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-900 ${member.status === "online"
-                            ? "bg-green-500 shadow-[0_0_8px_#22c55e]"
-                            : member.status === "busy"
-                              ? "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
-                              : "bg-gray-500"
+                          ? "bg-green-500 shadow-[0_0_8px_#22c55e]"
+                          : member.status === "busy"
+                            ? "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
+                            : "bg-gray-500"
                           }`}
                       />
                     </div>
@@ -638,8 +632,8 @@ const Settings = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${activeTab === tab.id
-                  ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
-                  : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10"
+                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
+                : "bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10"
                 }`}
               whileHover={{ x: 4 }}
             >
