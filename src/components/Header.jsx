@@ -25,9 +25,70 @@ const Header = ({ onCommandPalette }) => {
   const { theme, toggleTheme, isDark } = useTheme();
   const { toggleMobileMenu, isMobile } = useMobileNav();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showLanguage, setShowLanguage] = useState(false);
+
+  // Searchable items
+  const searchableItems = [
+    // Pages
+    { id: 1, type: "page", title: "Command Center", path: "/", keywords: ["dashboard", "home", "overview"] },
+    { id: 2, type: "page", title: "Live Monitor", path: "/monitoring", keywords: ["live", "realtime", "parameters"] },
+    { id: 3, type: "page", title: "Geo-Spatial Map", path: "/map", keywords: ["map", "location", "stations"] },
+    { id: 4, type: "page", title: "Analytics", path: "/analytics", keywords: ["data", "charts", "analysis"] },
+    { id: 5, type: "page", title: "Alerts", path: "/alerts", keywords: ["notifications", "warnings", "critical"] },
+    { id: 6, type: "page", title: "Reports", path: "/reports", keywords: ["documents", "export", "pdf"] },
+    { id: 7, type: "page", title: "Settings", path: "/settings", keywords: ["config", "preferences"] },
+    { id: 8, type: "page", title: "Operator Mode", path: "/operator", keywords: ["control", "pumps", "valves"] },
+    // Parameters
+    { id: 10, type: "parameter", title: "pH Level", path: "/monitoring", keywords: ["ph", "acidity", "alkaline"] },
+    { id: 11, type: "parameter", title: "Turbidity", path: "/monitoring", keywords: ["clarity", "ntu", "particles"] },
+    { id: 12, type: "parameter", title: "Dissolved Oxygen", path: "/monitoring", keywords: ["do", "oxygen", "o2"] },
+    { id: 13, type: "parameter", title: "Temperature", path: "/monitoring", keywords: ["temp", "celsius", "heat"] },
+    { id: 14, type: "parameter", title: "TDS", path: "/monitoring", keywords: ["dissolved solids", "ppm"] },
+    { id: 15, type: "parameter", title: "COD", path: "/monitoring", keywords: ["chemical oxygen demand"] },
+    { id: 16, type: "parameter", title: "BOD", path: "/monitoring", keywords: ["biological oxygen demand"] },
+    // Stations
+    { id: 20, type: "station", title: "Station A1", path: "/map", keywords: ["primary", "intake"] },
+    { id: 21, type: "station", title: "Station A3", path: "/map", keywords: ["treatment"] },
+    { id: 22, type: "station", title: "Station C1", path: "/map", keywords: ["outlet"] },
+    { id: 23, type: "station", title: "Station D4", path: "/map", keywords: ["reservoir"] },
+    { id: 24, type: "station", title: "Station E2", path: "/map", keywords: ["sensor hub"] },
+    // Actions
+    { id: 30, type: "action", title: "Generate Report", path: "/reports", keywords: ["export", "pdf", "download"] },
+    { id: 31, type: "action", title: "View Alerts", path: "/alerts", keywords: ["notifications", "warnings"] },
+    { id: 32, type: "action", title: "System Settings", path: "/settings", keywords: ["config", "preferences"] },
+  ];
+
+  // Filter search results
+  const searchResults = searchQuery.trim()
+    ? searchableItems.filter(item => {
+      const query = searchQuery.toLowerCase();
+      return (
+        item.title.toLowerCase().includes(query) ||
+        item.keywords.some(k => k.toLowerCase().includes(query))
+      );
+    }).slice(0, 8)
+    : [];
+
+  // Handle search item click
+  const handleSearchSelect = (item) => {
+    navigate(item.path);
+    setSearchQuery("");
+    setIsSearchFocused(false);
+  };
+
+  // Get icon for result type
+  const getResultIcon = (type) => {
+    switch (type) {
+      case "page": return "📄";
+      case "parameter": return "📊";
+      case "station": return "📍";
+      case "action": return "⚡";
+      default: return "🔗";
+    }
+  };
 
   const notifications = [
     {
@@ -90,31 +151,89 @@ const Header = ({ onCommandPalette }) => {
         </AnimatePresence>
 
         <div
-          className={`relative flex items-center rounded-full px-5 py-3 transition-all duration-300 ${
-            isSearchFocused
+          className={`relative flex items-center rounded-full px-5 py-3 transition-all duration-300 ${isSearchFocused
               ? "bg-white/10 border-cyan-500/50"
               : "bg-white/5 border-white/10 hover:bg-white/8"
-          }`}
+            }`}
           style={{ border: "1px solid" }}
         >
           <Search
             size={16}
-            className={`mr-3 transition-colors ${
-              isSearchFocused ? "text-cyan-400" : "text-gray-400"
-            }`}
+            className={`mr-3 transition-colors ${isSearchFocused ? "text-cyan-400" : "text-gray-400"
+              }`}
           />
           <input
             type="text"
             placeholder="Search parameters, stations, logs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent border-none outline-none text-sm w-full text-white placeholder-gray-500 font-body"
             onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
+            onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setSearchQuery("");
+                setIsSearchFocused(false);
+                e.target.blur();
+              }
+            }}
           />
           <div className="flex items-center gap-1 text-[10px] text-gray-500 bg-black/30 px-2 py-1 rounded-md border border-white/5 font-mono">
             <Command size={10} />
             <span>K</span>
           </div>
         </div>
+
+        {/* Search Results Dropdown */}
+        <AnimatePresence>
+          {isSearchFocused && searchResults.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute top-full left-0 right-0 mt-2 glass-panel p-2 rounded-xl z-50 max-h-[400px] overflow-y-auto"
+            >
+              <div className="text-[10px] text-gray-500 px-3 py-2 font-mono uppercase tracking-wider">
+                Search Results ({searchResults.length})
+              </div>
+              {searchResults.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleSearchSelect(item)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-left group"
+                >
+                  <span className="text-lg">{getResultIcon(item.type)}</span>
+                  <div className="flex-1">
+                    <span className="text-sm text-white group-hover:text-cyan-400 transition-colors">
+                      {item.title}
+                    </span>
+                    <span className="text-[10px] text-gray-500 ml-2 capitalize">
+                      {item.type}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-gray-600 font-mono">
+                    {item.path}
+                  </span>
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* No Results Message */}
+        <AnimatePresence>
+          {isSearchFocused && searchQuery.trim() && searchResults.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute top-full left-0 right-0 mt-2 glass-panel p-4 rounded-xl z-50 text-center"
+            >
+              <p className="text-sm text-gray-400">No results found for "{searchQuery}"</p>
+              <p className="text-xs text-gray-600 mt-1">Try searching for pages, parameters, or stations</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Right Actions */}
@@ -173,11 +292,10 @@ const Header = ({ onCommandPalette }) => {
                         setLanguage(lang.code);
                         setShowLanguage(false);
                       }}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                        language === lang.code
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors ${language === lang.code
                           ? "bg-cyan-500/10 text-cyan-400"
                           : "text-gray-300 hover:bg-white/5"
-                      }`}
+                        }`}
                     >
                       <span>{lang.name}</span>
                       {language === lang.code && <Check size={14} />}

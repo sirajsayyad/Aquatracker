@@ -19,9 +19,11 @@ import {
   Smartphone,
   Mail,
 } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("team");
+  const { t } = useLanguage();
   const [settings, setSettings] = useState({
     darkMode: true,
     notifications: true,
@@ -127,9 +129,9 @@ const Settings = () => {
                     <Sun size={20} className="text-amber-400" />
                   )}
                   <div>
-                    <h4 className="text-sm font-bold text-white">Dark Mode</h4>
+                    <h4 className="text-sm font-bold text-white">{t("darkMode")}</h4>
                     <p className="text-xs text-gray-500">
-                      Use dark theme for the interface
+                      {t("darkModeDesc")}
                     </p>
                   </div>
                 </div>

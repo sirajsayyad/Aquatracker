@@ -14,6 +14,7 @@ import {
   Activity,
   Zap,
 } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 import {
   AreaChart,
   Area,
@@ -37,6 +38,7 @@ import {
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState("7D");
+  const { t } = useLanguage();
 
   // Mock data for analytics
   const weeklyTrends = [
@@ -103,10 +105,10 @@ const Analytics = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold font-display">
-              Advanced Analytics
+              {t("advancedAnalytics")}
             </h1>
             <p className="text-sm text-gray-500 font-mono">
-              Data insights & trends
+              {t("dataInsights")}
             </p>
           </div>
         </div>
@@ -117,11 +119,10 @@ const Analytics = () => {
               <button
                 key={t}
                 onClick={() => setTimeRange(t)}
-                className={`px-3 py-2 text-xs font-bold rounded-lg transition-all ${
-                  timeRange === t
+                className={`px-3 py-2 text-xs font-bold rounded-lg transition-all ${timeRange === t
                     ? "bg-purple-500/20 text-purple-400 border border-purple-500/30"
                     : "text-gray-500 hover:text-white hover:bg-white/5"
-                }`}
+                  }`}
               >
                 {t}
               </button>
@@ -136,7 +137,7 @@ const Analytics = () => {
             }
           >
             <Download size={16} />
-            Export
+            {t("export")}
           </motion.button>
         </div>
       </motion.div>
@@ -145,28 +146,28 @@ const Analytics = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mobile-grid-cols-1">
         {[
           {
-            label: "Avg. WQI Score",
+            label: t("avgWqiScore"),
             value: "92.4",
             trend: "+3.2%",
             icon: Droplets,
             color: "cyan",
           },
           {
-            label: "Treatment Efficiency",
+            label: t("treatmentEfficiency"),
             value: "94.1%",
             trend: "+1.8%",
             icon: Activity,
             color: "green",
           },
           {
-            label: "Compliance Rate",
+            label: t("complianceRate"),
             value: "98.5%",
             trend: "+0.5%",
             icon: BarChart3,
             color: "purple",
           },
           {
-            label: "Energy Usage",
+            label: t("energyUsage"),
             value: "2,450 kWh",
             trend: "-5.2%",
             icon: Zap,
@@ -217,7 +218,7 @@ const Analytics = () => {
         {/* Weekly Trends Chart */}
         <motion.div className="holo-panel p-6" variants={itemVariants}>
           <h3 className="text-lg font-bold font-display mb-4">
-            Weekly Trend Analysis
+            {t("weeklyTrendAnalysis")}
           </h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -269,7 +270,7 @@ const Analytics = () => {
         {/* Compliance Pie Chart */}
         <motion.div className="holo-panel p-6" variants={itemVariants}>
           <h3 className="text-lg font-bold font-display mb-4">
-            Compliance Overview
+            {t("complianceOverview")}
           </h3>
           <div className="h-[300px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
@@ -300,7 +301,7 @@ const Analytics = () => {
         {/* Parameter Comparison */}
         <motion.div className="holo-panel p-6" variants={itemVariants}>
           <h3 className="text-lg font-bold font-display mb-4">
-            Parameter vs Target
+            {t("parameterVsTarget")}
           </h3>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -343,7 +344,7 @@ const Analytics = () => {
         {/* Radar Chart */}
         <motion.div className="holo-panel p-6" variants={itemVariants}>
           <h3 className="text-lg font-bold font-display mb-4">
-            System Performance Radar
+            {t("systemPerformanceRadar")}
           </h3>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">

@@ -6,6 +6,7 @@ import TeamSlider from "../components/TeamSlider";
 import AlertsPanel from "../components/AlertsPanel";
 import FeaturesSlider from "../components/FeaturesSlider";
 import useMobilePerformance from "../hooks/useMobilePerformance";
+import { useLanguage } from "../context/LanguageContext";
 import {
   AlertTriangle,
   CheckCircle,
@@ -36,6 +37,7 @@ import {
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState("8H");
   const { isMobile, reduceMotion } = useMobilePerformance();
+  const { t } = useLanguage();
 
   // Optimized animation variants based on device performance
   const containerVariants = useMemo(() => ({
@@ -84,7 +86,7 @@ const Dashboard = () => {
                 <div className="flex items-center gap-2 mb-2">
                   <Droplets size={16} className="text-cyan-400" />
                   <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">
-                    Water Quality Index
+                    {t("waterQualityIndex")}
                   </span>
                 </div>
                 <motion.div
@@ -157,7 +159,7 @@ const Dashboard = () => {
             <div className="flex items-center gap-2 mb-3">
               <CheckCircle size={16} className="text-green-400" />
               <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
-                Compliance
+                {t("complianceRate")}
               </span>
             </div>
 
@@ -189,7 +191,7 @@ const Dashboard = () => {
             <div className="flex items-center gap-2 mb-3">
               <AlertTriangle size={16} className="text-amber-400" />
               <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
-                Active Alerts
+                {t("alerts")}
               </span>
             </div>
 
@@ -228,7 +230,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="text-lg font-bold font-display">
-                  AI Predictions
+                  {t("aiPredictions")}
                 </h3>
                 <p className="text-xs text-gray-500 font-mono">
                   Neural network analysis
@@ -419,8 +421,8 @@ const Dashboard = () => {
                 key={t}
                 onClick={() => setTimeRange(t)}
                 className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${timeRange === t
-                    ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                    : "text-gray-500 hover:text-white hover:bg-white/5"
+                  ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+                  : "text-gray-500 hover:text-white hover:bg-white/5"
                   }`}
               >
                 {t}

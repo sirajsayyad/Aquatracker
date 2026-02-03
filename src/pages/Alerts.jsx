@@ -16,13 +16,16 @@ import {
   Trash2,
   Eye,
 } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const Alerts = () => {
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAlert, setSelectedAlert] = useState(null);
+  const [notification, setNotification] = useState(null);
+  const { t } = useLanguage();
 
-  const alerts = [
+  const [alerts, setAlerts] = useState([
     {
       id: 1,
       type: "critical",
@@ -109,7 +112,47 @@ const Alerts = () => {
       status: "active",
       priority: "low",
     },
-  ];
+  ]);
+
+  // Show notification helper
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  // Mark alert as resolved
+  const handleMarkResolved = (alertId) => {
+    setAlerts(prev => prev.map(alert =>
+      alert.id === alertId
+        ? { ...alert, status: "resolved", type: "success" }
+        : alert
+    ));
+    setSelectedAlert(null);
+    showNotification("Alert marked as resolved!", "success");
+  };
+
+  // Acknowledge alert
+  const handleAcknowledge = (alertId) => {
+    setAlerts(prev => prev.map(alert =>
+      alert.id === alertId
+        ? { ...alert, status: "acknowledged" }
+        : alert
+    ));
+    setSelectedAlert(null);
+    showNotification("Alert acknowledged", "info");
+  };
+
+  // Quick resolve from list
+  const handleQuickResolve = (alertId, e) => {
+    e.stopPropagation();
+    handleMarkResolved(alertId);
+  };
+
+  // Quick acknowledge from list
+  const handleQuickAcknowledge = (alertId, e) => {
+    e.stopPropagation();
+    handleAcknowledge(alertId);
+  };
 
   const getAlertIcon = (type) => {
     switch (type) {
@@ -179,6 +222,23 @@ const Alerts = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: -50, x: "-50%" }}
+            className={`fixed top-6 left-1/2 z-[100] px-6 py-3 rounded-xl border backdrop-blur-md flex items-center gap-3 shadow-lg ${notification.type === "success"
+              ? "bg-green-500/20 border-green-500/50 text-green-400"
+              : "bg-cyan-500/20 border-cyan-500/50 text-cyan-400"
+              }`}
+          >
+            {notification.type === "success" ? <CheckCircle size={18} /> : <Info size={18} />}
+            <span className="font-medium">{notification.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -192,10 +252,10 @@ const Alerts = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold font-display">
-              Alert Management
+              {t("alertManagement")}
             </h1>
             <p className="text-sm text-gray-500 font-mono">
-              {alerts.length} total alerts
+              {alerts.length} {t("totalAlerts")}
             </p>
           </div>
         </div>
@@ -226,11 +286,10 @@ const Alerts = () => {
           <button
             key={tab.key}
             onClick={() => setFilter(tab.key)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              filter === tab.key
-                ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                : "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10"
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === tab.key
+              ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+              : "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10"
+              }`}
           >
             {tab.label}
             <span className="text-xs px-1.5 py-0.5 rounded-full bg-black/30">
@@ -285,9 +344,8 @@ const Alerts = () => {
                   className="w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/30 flex-center text-green-400"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+                  onClick={(e) => handleQuickResolve(alert.id, e)}
+                  title="Mark Resolved"
                 >
                   <Check size={14} />
                 </motion.button>
@@ -295,9 +353,8 @@ const Alerts = () => {
                   className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex-center text-gray-400"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+                  onClick={(e) => handleQuickAcknowledge(alert.id, e)}
+                  title="Acknowledge"
                 >
                   <Eye size={14} />
                 </motion.button>
@@ -359,10 +416,18 @@ const Alerts = () => {
                 </span>
               </div>
               <div className="flex gap-3">
-                <button className="flex-1 px-4 py-2.5 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 font-medium hover:bg-green-500/20 transition-colors">
+                <button
+                  onClick={() => handleMarkResolved(selectedAlert.id)}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 font-medium hover:bg-green-500/20 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Check size={16} />
                   Mark Resolved
                 </button>
-                <button className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-colors">
+                <button
+                  onClick={() => handleAcknowledge(selectedAlert.id)}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Eye size={16} />
                   Acknowledge
                 </button>
               </div>

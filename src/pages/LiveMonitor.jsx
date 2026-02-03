@@ -8,8 +8,14 @@ import {
   RefreshCw,
   Maximize2,
   Download,
+  CheckCircle,
+  XCircle,
+  BarChart3,
+  ClipboardCheck,
+  AlertCircle,
 } from "lucide-react";
 import { liveParameters, parameterTrends } from "../data/mockData";
+import { useLanguage } from "../context/LanguageContext";
 import {
   LineChart,
   Line,
@@ -24,6 +30,20 @@ import {
 
 const LiveMonitor = () => {
   const [selectedTimeRange, setSelectedTimeRange] = useState("30M");
+  const [activeView, setActiveView] = useState("graphs"); // "graphs" or "standards"
+  const { t } = useLanguage();
+
+  // Water Quality Standards data
+  const standardsData = [
+    { key: "pH", name: "pH Level", abbr: "PH", range: "6.5 - 8.5", min: 6.5, max: 8.5 },
+    { key: "Turbidity", name: "Turbidity", abbr: "TURBIDITY", range: "0 - 20 NTU", min: 0, max: 20 },
+    { key: "COD", name: "Chemical Oxygen Demand", abbr: "COD", range: "0 - 50 mg/L", min: 0, max: 50 },
+    { key: "BOD", name: "Biological Oxygen Demand", abbr: "BOD", range: "0 - 25 mg/L", min: 0, max: 25 },
+    { key: "DO", name: "Dissolved Oxygen", abbr: "DO", range: "5 - 15 mg/L", min: 5, max: 15 },
+    { key: "TDS", name: "Total Dissolved Solids", abbr: "TDS", range: "0 - 400 ppm", min: 0, max: 400 },
+    { key: "Temp", name: "Temperature", abbr: "TEMP", range: "10 - 30 °C", min: 10, max: 30 },
+    { key: "Colorimetric", name: "Colorimetric", abbr: "COLOR", range: "0 - 50 Pt-Co", min: 0, max: 50 },
+  ];
 
   const parameterConfig = {
     pH: { color: "#00f2ff", unit: "", min: 6, max: 9, label: "pH Level" },
@@ -49,6 +69,20 @@ const LiveMonitor = () => {
       min: 20,
       max: 35,
       label: "Temperature",
+    },
+    TDS: {
+      color: "#3b82f6",
+      unit: "ppm",
+      min: 200,
+      max: 500,
+      label: "TDS (Total Dissolved Solids)",
+    },
+    Colorimetric: {
+      color: "#f472b6",
+      unit: "Pt-Co",
+      min: 0,
+      max: 50,
+      label: "Calorimetric",
     },
   };
 
@@ -82,6 +116,21 @@ const LiveMonitor = () => {
     ).toFixed(1);
   };
 
+  // Check if value is within acceptable range
+  const checkCompliance = (paramKey, min, max) => {
+    const currentValue = getLatestValue(paramKey);
+    return currentValue >= min && currentValue <= max;
+  };
+
+  // Get unit for parameter
+  const getUnit = (paramKey) => {
+    const units = {
+      pH: "", Turbidity: "NTU", DO: "mg/L", COD: "mg/L",
+      BOD: "mg/L", Temp: "°C", TDS: "ppm", Colorimetric: "Pt-Co"
+    };
+    return units[paramKey] || "";
+  };
+
   return (
     <motion.div
       className="space-y-6 pb-10"
@@ -99,9 +148,9 @@ const LiveMonitor = () => {
             <Activity size={24} className="text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold font-display">Live Monitor</h1>
+            <h1 className="text-2xl font-bold font-display">{t("liveMonitor")}</h1>
             <p className="text-sm text-gray-500 font-mono">
-              Real-time parameter tracking
+              {t("realTimeTracking")}
             </p>
           </div>
         </div>
@@ -113,11 +162,10 @@ const LiveMonitor = () => {
               <button
                 key={t}
                 onClick={() => setSelectedTimeRange(t)}
-                className={`px-3 py-2 text-xs font-bold rounded-lg transition-all ${
-                  selectedTimeRange === t
-                    ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                    : "text-gray-500 hover:text-white hover:bg-white/5"
-                }`}
+                className={`px-3 py-2 text-xs font-bold rounded-lg transition-all ${selectedTimeRange === t
+                  ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+                  : "text-gray-500 hover:text-white hover:bg-white/5"
+                  }`}
               >
                 {t}
               </button>
@@ -137,8 +185,115 @@ const LiveMonitor = () => {
         </div>
       </motion.div>
 
+      {/* View Tabs */}
+      <motion.div variants={itemVariants} className="flex items-center gap-2">
+        <button
+          onClick={() => setActiveView("graphs")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeView === "graphs"
+            ? "bg-white/10 text-white border border-white/20"
+            : "text-gray-500 hover:text-white hover:bg-white/5"
+            }`}
+        >
+          <BarChart3 size={16} />
+          Graphs View
+        </button>
+        <button
+          onClick={() => setActiveView("standards")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeView === "standards"
+            ? "bg-green-500/20 text-green-400 border border-green-500/30"
+            : "text-gray-500 hover:text-white hover:bg-white/5"
+            }`}
+        >
+          <ClipboardCheck size={16} />
+          Standards
+        </button>
+      </motion.div>
+
+      {/* Standards Table View */}
+      {activeView === "standards" && (
+        <motion.div
+          className="holo-panel p-6"
+          variants={itemVariants}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-white mb-1">Water Quality Standards</h2>
+            <p className="text-sm text-gray-500">Regulatory compliance check against current readings</p>
+          </div>
+
+          {/* Standards Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left py-3 px-4 text-xs font-mono text-gray-400 uppercase tracking-wider">Parameter</th>
+                  <th className="text-center py-3 px-4 text-xs font-mono text-gray-400 uppercase tracking-wider">Acceptable Range</th>
+                  <th className="text-center py-3 px-4 text-xs font-mono text-gray-400 uppercase tracking-wider">Current Value</th>
+                  <th className="text-center py-3 px-4 text-xs font-mono text-gray-400 uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {standardsData.map((param, index) => {
+                  const currentValue = getLatestValue(param.key);
+                  const isCompliant = checkCompliance(param.key, param.min, param.max);
+                  return (
+                    <tr
+                      key={param.key}
+                      className={`border-b border-white/5 ${index % 2 === 0 ? 'bg-white/[0.02]' : ''}`}
+                    >
+                      <td className="py-4 px-4">
+                        <div>
+                          <span className="text-sm font-medium text-white">{param.name}</span>
+                          <p className="text-[10px] font-mono text-gray-500">{param.abbr}</p>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-sm text-gray-300">{param.range}</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className={`text-sm font-bold ${isCompliant ? 'text-cyan-400' : 'text-red-400'}`}>
+                          {currentValue} {getUnit(param.key)}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        {isCompliant ? (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs font-medium">
+                            <CheckCircle size={12} />
+                            Compliant
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 text-red-400 text-xs font-medium">
+                            <XCircle size={12} />
+                            Non-compliant
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Regulatory Note */}
+          <div className="mt-6 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
+            <div className="flex items-start gap-3">
+              <AlertCircle size={18} className="text-amber-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <h4 className="text-sm font-bold text-amber-400 mb-1">Regulatory Note</h4>
+                <p className="text-xs text-gray-400">
+                  These standards are based on typical industrial wastewater discharge regulations.
+                  Actual requirements may vary by location and specific industry regulations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       {/* Parameter Graphs Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      {activeView === "graphs" && (<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {Object.entries(parameterConfig).map(([key, config], index) => (
           <motion.div
             key={key}
@@ -296,7 +451,7 @@ const LiveMonitor = () => {
             </div>
           </motion.div>
         ))}
-      </div>
+      </div>)}
 
       {/* Summary Stats */}
       <motion.div className="holo-panel p-6" variants={itemVariants}>
@@ -306,7 +461,7 @@ const LiveMonitor = () => {
             <span className="text-[10px] text-gray-500 uppercase tracking-wider font-mono">
               Parameters Monitored
             </span>
-            <div className="text-2xl font-bold text-white mt-1">6</div>
+            <div className="text-2xl font-bold text-white mt-1">8</div>
           </div>
           <div className="p-4 rounded-xl bg-white/5 border border-white/5">
             <span className="text-[10px] text-gray-500 uppercase tracking-wider font-mono">

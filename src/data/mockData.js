@@ -57,6 +57,22 @@ export const liveParameters = [
     max: 50,
     thresholds: { warning: 35, critical: 40 },
   },
+  {
+    label: "TDS",
+    value: 320,
+    unit: "ppm",
+    min: 0,
+    max: 1000,
+    thresholds: { warning: 500, critical: 800 },
+  },
+  {
+    label: "Colorimetric",
+    value: 15,
+    unit: "Pt-Co",
+    min: 0,
+    max: 100,
+    thresholds: { warning: 50, critical: 75 },
+  },
 ];
 
 // Alerts Data
@@ -239,6 +255,30 @@ export const parameterTrends = {
     { time: "11:30", value: 28 },
     { time: "12:00", value: 27 },
     { time: "12:30", value: 28 },
+  ],
+  TDS: [
+    { time: "08:00", value: 290 },
+    { time: "08:30", value: 295 },
+    { time: "09:00", value: 305 },
+    { time: "09:30", value: 310 },
+    { time: "10:00", value: 315 },
+    { time: "10:30", value: 320 },
+    { time: "11:00", value: 318 },
+    { time: "11:30", value: 322 },
+    { time: "12:00", value: 325 },
+    { time: "12:30", value: 320 },
+  ],
+  Colorimetric: [
+    { time: "08:00", value: 12 },
+    { time: "08:30", value: 13 },
+    { time: "09:00", value: 14 },
+    { time: "09:30", value: 15 },
+    { time: "10:00", value: 14 },
+    { time: "10:30", value: 16 },
+    { time: "11:00", value: 15 },
+    { time: "11:30", value: 14 },
+    { time: "12:00", value: 13 },
+    { time: "12:30", value: 15 },
   ],
 };
 

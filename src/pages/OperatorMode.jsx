@@ -82,6 +82,7 @@ const OperatorMode = () => {
     const [notification, setNotification] = useState(null);
     const [alertCount, setAlertCount] = useState(2);
     const [maintenanceMode, setMaintenanceMode] = useState(false);
+    const [emergencyMode, setEmergencyMode] = useState(false);
 
     const containerVariants = useMemo(() => ({
         hidden: { opacity: reduceMotion ? 1 : 0 },
@@ -228,6 +229,49 @@ const OperatorMode = () => {
         }
     };
 
+    // Emergency Stop - Stops ALL systems immediately
+    const emergencyStopAll = () => {
+        setEmergencyMode(true);
+
+        // Stop all pumps
+        setEquipment((prev) => ({
+            ...prev,
+            pumps: prev.pumps.map((pump) => ({
+                ...pump,
+                status: "stopped",
+                speed: 0,
+                flowRate: 0,
+            })),
+            // Close all valves
+            valves: prev.valves.map((valve) => ({
+                ...valve,
+                status: "closed",
+                position: 0,
+            })),
+            // Deactivate all dosing systems
+            dosingSystems: prev.dosingSystems.map((ds) => ({
+                ...ds,
+                status: "stopped",
+                rate: 0,
+            })),
+            // Stop all aerators
+            aerators: prev.aerators.map((aerator) => ({
+                ...aerator,
+                status: "stopped",
+                power: 0,
+            })),
+        }));
+
+        setAlertCount((prev) => prev + 1);
+        showNotification("⚠️ EMERGENCY STOP ACTIVATED - All systems halted!", "warning");
+    };
+
+    // Reset Emergency Mode
+    const resetEmergencyMode = () => {
+        setEmergencyMode(false);
+        showNotification("Emergency mode reset. Systems ready for restart.", "success");
+    };
+
     const filteredPumps =
         activeZone === "all"
             ? equipment.pumps
@@ -282,12 +326,16 @@ const OperatorMode = () => {
 
                 {/* Emergency Stop */}
                 <motion.button
-                    className="px-6 py-3 rounded-xl bg-red-500/20 border-2 border-red-500 text-red-400 font-bold flex items-center gap-2 hover:bg-red-500/30 transition-all"
-                    whileHover={{ scale: 1.02 }}
+                    className={`px-6 py-3 rounded-xl border-2 font-bold flex items-center gap-2 transition-all ${emergencyMode
+                            ? "bg-red-500 border-red-400 text-white animate-pulse"
+                            : "bg-red-500/20 border-red-500 text-red-400 hover:bg-red-500/30"
+                        }`}
+                    whileHover={{ scale: emergencyMode ? 1 : 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    onClick={emergencyMode ? resetEmergencyMode : emergencyStopAll}
                 >
                     <Power size={20} />
-                    EMERGENCY STOP
+                    {emergencyMode ? "RESET EMERGENCY" : "EMERGENCY STOP"}
                 </motion.button>
             </motion.div>
 

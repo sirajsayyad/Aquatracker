@@ -40,7 +40,7 @@ const Sidebar = () => {
     { icon: Bell, labelKey: "alerts", path: "/alerts" },
     { icon: FileText, labelKey: "reports", path: "/reports" },
     { icon: Settings, labelKey: "config", path: "/settings" },
-    { icon: Sliders, label: "Operator Mode", path: "/operator" },
+    { icon: Sliders, labelKey: "operatorMode", path: "/operator" },
   ];
 
   const features = [
